@@ -22,6 +22,8 @@
 
 #include "mkfs.ubifs.h"
 
+#include <private/android_filesystem_config.h>
+
 #define PROGRAM_VERSION "1.2"
 
 /* Size (prime number) of hash table for link counting */
@@ -99,6 +101,7 @@ static struct ubifs_info *c = &info_;
 /* Debug levels are: 0 (none), 1 (statistics), 2 (files) ,3 (more details) */
 int debug_level;
 int verbose;
+int fixstats;
 
 static char *root;
 static int root_len;
@@ -128,7 +131,7 @@ static struct inum_mapping **hash_table;
 /* Inode creation sequence number */
 static unsigned long long creat_sqnum;
 
-static const char *optstring = "d:r:m:o:D:h?vVe:c:g:f:FP:k:x:X:j:R:l:j:U:";
+static const char *optstring = "d:r:sm:o:D:h?vVe:c:g:f:FP:k:x:X:j:R:l:j:U:";
 
 static const struct option longopts[] = {
 	{"root",          1, NULL, 'r'},
@@ -151,6 +154,7 @@ static const struct option longopts[] = {
 	{"log-lebs",      1, NULL, 'l'},
 	{"orph-lebs",     1, NULL, 'p'},
 	{"squash-uids" ,  0, NULL, 'U'},
+	{"fixstats",      0, NULL, 's'},
 	{NULL, 0, NULL, 0}
 };
 
@@ -525,6 +529,10 @@ static int get_options(int argc, char**argv)
 			if (stat(root, &st))
 				return sys_err_msg("bad root directory '%s'",
 						   root);
+			break;
+		case 's':
+			fixstats = 1;
+			printf("Fixing stats per Android permissions\n");
 			break;
 		case 'm':
 			c->min_io_size = get_bytes(optarg);
@@ -1468,6 +1476,21 @@ static int add_directory(const char *dir_name, ino_t dir_inum, struct stat *st,
 			 * this.
 			 */
 			dent_st.st_uid = dent_st.st_gid = 0;
+
+		if (fixstats) {
+			uint64_t capabilities;
+			int len = strlen(dir_name);
+			if((len >= 5) && (!strcmp(root + root_len - 5, "data/"))) {
+				len = root_len - 5;
+			} else if((len >= 7) && (!strcmp(root + root_len - 7, "system/"))) {
+				len = root_len - 7;
+			} else {
+				fprintf(stderr,"Fixstats (-s) option requested but filesystem is not data or android!\n");
+				exit(1);
+			}
+			dent_st.st_uid = dent_st.st_gid = 0;
+			fs_config(name + len, S_ISDIR(dent_st.st_mode), &dent_st.st_uid, &dent_st.st_gid, &dent_st.st_mode, &capabilities);
+		}
 
 		/*
 		 * And if the device table describes the same file, override

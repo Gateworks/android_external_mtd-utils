@@ -29,6 +29,8 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/hashtable
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := mkfs.ubifs
 
+LOCAL_STATIC_LIBRARIES := libselinux
+
 include $(BUILD_HOST_EXECUTABLE)
 
 endif
