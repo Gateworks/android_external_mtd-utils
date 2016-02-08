@@ -403,6 +403,7 @@ struct ubifs_info
 	int nhead_lnum;
 	int nhead_offs;
 	int big_lpt;
+	int space_fixup;
 	long long lpt_sz;
 
 	int ltab_lnum;
