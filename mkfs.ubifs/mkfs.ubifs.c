@@ -143,7 +143,7 @@ static struct inum_mapping **hash_table;
 /* Inode creation sequence number */
 static unsigned long long creat_sqnum;
 
-static const char *optstring = "d:r:m:o:D:h?vVe:c:g:f:P:k:x:X:j:R:l:j:U:Fs:";
+static const char *optstring = "d:r:m:o:D:h?vVe:c:g:f:P:k:x:X:j:R:l:j:U:s:S";
 
 static const struct option longopts[] = {
 	{"root",          1, NULL, 'r'},
@@ -165,7 +165,7 @@ static const struct option longopts[] = {
 	{"log-lebs",      1, NULL, 'l'},
 	{"orph-lebs",     1, NULL, 'p'},
 	{"squash-uids" ,  0, NULL, 'U'},
-        {"fixstats",      0, NULL, 'F'},
+        {"fixstats",      0, NULL, 'S'},
 	{"selinux",       1, NULL, 's'},
 	{NULL, 0, NULL, 0}
 };
@@ -566,7 +566,7 @@ static int get_options(int argc, char**argv)
 				return sys_err_msg("bad root directory '%s'",
 						   root);
 			break;
-		case 'F':
+		case 'S':
 			fixstats = 1;
 			break;
 		case 'm':
