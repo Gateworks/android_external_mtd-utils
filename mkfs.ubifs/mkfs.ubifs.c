@@ -119,7 +119,6 @@ static int out_fd;
 static int out_ubi;
 static int squash_owner;
 static char *context;
-static int context_len;
 static struct stat context_st;
 
 /* The 'head' (position) which nodes are written */
@@ -143,7 +142,7 @@ static struct inum_mapping **hash_table;
 /* Inode creation sequence number */
 static unsigned long long creat_sqnum;
 
-static const char *optstring = "d:r:m:o:D:h?vVe:c:g:f:FP:k:x:X:j:R:l:j:U:sS:";
+static const char *optstring = "d:r:m:o:D:h?vVe:c:g:f:FP:k:x:X:j:R:l:j:U:s:S";
 
 static const struct option longopts[] = {
 	{"root",          1, NULL, 'r'},
@@ -684,15 +683,8 @@ static int get_options(int argc, char**argv)
 			squash_owner = 1;
 			break;
 		case 's':
-			printf("enter ths s opption\n");
-			context_len = strlen(optarg);
-			printf("the context_len is %d \n",context_len);
-			context = malloc(context_len + 1);
-			if (!context)
-				return err_msg("cannot allocate memory");
-
-			memcpy(context, optarg, context_len);
-
+			context = strdup(optarg);
+			printf("using selinux file context from %s\n", context);
 			/* Make sure the root directory exists */
 			if (stat(context, &context_st))
 				return sys_err_msg("bad file context '%s'",
