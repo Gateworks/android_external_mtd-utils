@@ -229,3 +229,70 @@ LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_EXECUTABLE)
 
+# nandwrite util
+#
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := nandwrite.c
+
+LOCAL_CFLAGS = -O2 -Wall
+LOCAL_CFLAGS += -Wall -Wextra -Wwrite-strings -Wno-sign-compare -D_FILE_OFFSET_BITS=64
+
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/ubi-utils/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/ubi-utils/src
+
+LOCAL_STATIC_LIBRARIES := libc
+
+LOCAL_MODULE := nandwrite
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT_SBIN)
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_EXECUTABLE)
+
+
+# flash_erase util
+#
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := crc32.c flash_erase.c
+
+LOCAL_CFLAGS = -O2 -Wall
+LOCAL_CFLAGS += -Wall -Wextra -Wwrite-strings -Wno-sign-compare -D_FILE_OFFSET_BITS=64
+
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/ubi-utils/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/ubi-utils/src
+
+LOCAL_STATIC_LIBRARIES := libc
+
+LOCAL_MODULE := flash_erase
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT_SBIN)
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_EXECUTABLE)
+
+
+# flash_eraseall util
+#
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES := crc32.c flash_eraseall.c
+
+LOCAL_CFLAGS = -O2 -Wall
+LOCAL_CFLAGS += -Wall -Wextra -Wwrite-strings -Wno-sign-compare -D_FILE_OFFSET_BITS=64
+
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/ubi-utils/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/ubi-utils/src
+
+LOCAL_STATIC_LIBRARIES := libc
+
+LOCAL_MODULE := flash_eraseall
+LOCAL_FORCE_STATIC_EXECUTABLE := true
+LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT_SBIN)
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_EXECUTABLE)
