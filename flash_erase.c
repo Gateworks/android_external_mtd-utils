@@ -103,6 +103,10 @@ int non_region_erase(int Fd, int start, int count, int unlock)
 
 		erase.length = meminfo.erasesize;
 
+		if (count == 0) {
+			count = (meminfo.size - start) / meminfo.erasesize;
+			printf("Erase Total %d Units\n", count);
+		}
 		for (; count > 0; count--) {
 			printf("\rPerforming Flash Erase of length %u at offset 0x%x",
 					erase.length, erase.start);
@@ -171,7 +175,8 @@ int main(int argc,char *argv[])
 		return 8;
 	}
 
-	printf("Erase Total %d Units\n", count);
+	if (count != 0)
+		printf("Erase Total %d Units\n", count);
 
 	if (ioctl(Fd,MEMGETREGIONCOUNT,&regcount) == 0)
 	{
